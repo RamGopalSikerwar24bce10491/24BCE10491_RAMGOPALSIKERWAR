@@ -1,0 +1,83 @@
+USE vitcampus;
+
+CREATE TABLE Persons (
+    ID INT NOT NULL,
+    LastName VARCHAR(255) UNIQUE NOT NULL,
+    FirstName VARCHAR(255) NOT NULL,
+    Age INT
+);
+
+DESC Persons;
+
+INSERT INTO Persons VALUES (101,'V','Jayanth',NULL);
+
+SELECT * FROM Persons;
+
+ALTER TABLE Persons
+ADD CONSTRAINT uq_age UNIQUE (Age);
+
+ALTER TABLE Persons
+DROP INDEX uq_age;
+
+DROP TABLE Persons;
+
+CREATE TABLE Persons (
+    Age INT NOT NULL,
+    CHECK (Age >= 18 AND Age <= 23)
+);
+
+INSERT INTO Persons VALUES (21);
+
+CREATE TABLE Persons1 (
+    ID INT NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    FirstName VARCHAR(255),
+    Age INT,
+    City VARCHAR(255) DEFAULT 'Coimbatore'
+);
+
+DESC Persons1;
+
+CREATE TABLE Products (
+    pid INT PRIMARY KEY,
+    pname VARCHAR(100) NOT NULL,
+    prefNo INT NOT NULL UNIQUE
+);
+
+DESC Products;
+
+INSERT INTO Products VALUES (102,'Furniture',19930);
+
+SELECT * FROM Products;
+ALTER TABLE Persons
+ADD PRIMARY KEY (Age);
+
+ALTER TABLE Persons
+DROP PRIMARY KEY;
+
+DROP TABLE Products;
+
+CREATE TABLE Category (
+    cid INT PRIMARY KEY,
+    cname VARCHAR(100) NOT NULL
+);
+
+INSERT INTO Category VALUES
+(101,'Electronics'),
+(102,'Home App');
+
+SELECT * FROM Category;
+
+CREATE TABLE Products (
+    pid INT PRIMARY KEY,
+    pname VARCHAR(100) NOT NULL,
+    cid INT,
+    FOREIGN KEY (cid) REFERENCES Category(cid)
+);
+
+DESC Products;
+DELETE FROM Category WHERE cid = 101;
+INSERT INTO Products VALUES
+(504,'Power Bank Samsung',101);
+
+SELECT * FROM Products;
