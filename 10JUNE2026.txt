@@ -1,0 +1,299 @@
+rs.initiate({
+  _id: "shard2ReplSet",
+  members: [
+    {
+      _id: 0,
+      host: "localhost:27012"
+    }
+  ]
+})
+{
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781100770, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781100770, i: 1 })
+}
+rs.status()
+{
+    appliedOpTime: { ts: Timestamp({ t: 1781100770, i: 16 }), t: Long('1') },
+    durableOpTime: { ts: Timestamp({ t: 1781100770, i: 16 }), t: Long('1') },
+    writtenOpTime: { ts: Timestamp({ t: 1781100770, i: 16 }), t: Long('1') },
+    lastAppliedWallTime: 2026-06-10T14:12:50.669Z,
+    lastDurableWallTime: 2026-06-10T14:12:50.669Z,
+    lastWrittenWallTime: 2026-06-10T14:12:50.669Z
+  },
+  lastStableRecoveryTimestamp: Timestamp({ t: 1781100770, i: 1 }),
+  electionCandidateMetrics: {
+    lastElectionReason: 'electionTimeout',
+    lastElectionDate: 2026-06-10T14:12:50.514Z,
+    electionTerm: Long('1'),
+    lastCommittedOpTimeAtElection: { ts: Timestamp({ t: 1781100770, i: 1 }), t: Long('-1') },
+    lastSeenWrittenOpTimeAtElection: { ts: Timestamp({ t: 1781100770, i: 1 }), t: Long('-1') },
+    lastSeenOpTimeAtElection: { ts: Timestamp({ t: 1781100770, i: 1 }), t: Long('-1') },
+    numVotesNeeded: 1,
+    priorityAtElection: 1,
+    electionTimeoutMillis: Long('10000'),
+    newTermStartDate: 2026-06-10T14:12:50.561Z,
+    wMajorityWriteAvailabilityDate: 2026-06-10T14:12:50.625Z
+  },
+  members: [
+    {
+      _id: 0,
+      name: 'localhost:27012',
+      health: 1,
+      state: 1,
+      stateStr: 'PRIMARY',
+      uptime: 49,
+      optime: { ts: Timestamp({ t: 1781100770, i: 16 }), t: Long('1') },
+      optimeDate: 2026-06-10T14:12:50.000Z,
+      optimeWritten: { ts: Timestamp({ t: 1781100770, i: 16 }), t: Long('1') },
+      optimeWrittenDate: 2026-06-10T14:12:50.000Z,
+      lastAppliedWallTime: 2026-06-10T14:12:50.669Z,
+      lastDurableWallTime: 2026-06-10T14:12:50.669Z,
+      lastWrittenWallTime: 2026-06-10T14:12:50.669Z,
+      syncSourceHost: '',
+      syncSourceId: -1,
+      infoMessage: 'Could not find member to sync from',
+      electionTime: Timestamp({ t: 1781100770, i: 2 }),
+      electionDate: 2026-06-10T14:12:50.000Z,
+      configVersion: 1,
+      configTerm: 1,
+      self: true,
+      lastHeartbeatMessage: ''
+    }
+  ],
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781100770, i: 16 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781100770, i: 16 })
+}
+test
+
+
+sh.addShard("shard1ReplSet/localhost:27011")
+{
+  shardAdded: 'shard1ReplSet',
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781101425, i: 28 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781101425, i: 28 })
+}
+sh.addShard("shard2ReplSet/localhost:27012")
+{
+  shardAdded: 'shard2ReplSet',
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781101453, i: 53 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781101453, i: 53 })
+}
+sh.enableSharding("eCommerceDB")
+{
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781101593, i: 22 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781101593, i: 22 })
+}
+sh.enableSharding("eCommerceDB")
+{
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781101853, i: 1 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781101853, i: 1 })
+}
+sh.shardCollection(
+   "eCommerceDB.orders",
+   { customer_id: "hashed" }
+)
+{
+  collectionsharded: 'eCommerceDB.orders',
+  ok: 1,
+  '$clusterTime': {
+    clusterTime: Timestamp({ t: 1781101871, i: 14 }),
+    signature: {
+      hash: Binary.createFromBase64('AAAAAAAAAAAAAAAAAAAAAAAAAAA=', 0),
+      keyId: Long('0')
+    }
+  },
+  operationTime: Timestamp({ t: 1781101871, i: 13 })
+}
+use eCommerceDB
+switched to db eCommerceDB
+for (let i = 0; i < 1000; i++) {
+    db.orders.insertOne({
+        customer_id: "cust_" + i,
+        amount: Math.random() * 100
+    })
+}
+{
+  acknowledged: true,
+  insertedId: ObjectId('6a297555969c11ab31824466')
+}
+sh.status()
+shardingVersion
+{
+  _id: ObjectId('6a29700b4f75e611e126e81d'),
+  clusterId: ObjectId('6a29700b4f75e611e126e81c')
+}
+shards
+[
+  {
+    _id: 'shard1ReplSet',
+    host: 'shard1ReplSet/localhost:27011',
+    topologyTime: Timestamp({ t: 1781101425, i: 2 }),
+    replSetConfigVersion: -1
+  },
+  {
+    _id: 'shard2ReplSet',
+    host: 'shard2ReplSet/localhost:27012',
+    topologyTime: Timestamp({ t: 1781101453, i: 29 }),
+    replSetConfigVersion: -1
+  }
+]
+active mongoses
+[
+  {
+    '8.3.2': 2
+  }
+]
+autosplit
+{
+  'Currently enabled': 'yes'
+}
+balancer
+{
+  'Currently enabled': 'yes',
+  'Currently running': 'no',
+  'Failed balancer rounds in last 5 attempts': 0,
+  'Migration Results for the last 24 hours': 'No recent migrations'
+}
+shardedDataDistribution
+[
+  {
+    ns: 'config.system.sessions',
+    shards: [
+      {
+        shardName: 'shard1ReplSet',
+        numOrphanedDocs: 0,
+        numOwnedDocuments: 24,
+        ownedSizeBytes: 2376,
+        orphanedSizeBytes: 0
+      }
+    ]
+  },
+  {
+    ns: 'eCommerceDB.orders',
+    shards: [
+      {
+        shardName: 'shard1ReplSet',
+        numOrphanedDocs: 0,
+        numOwnedDocuments: 491,
+        ownedSizeBytes: 30933,
+        orphanedSizeBytes: 0
+      },
+      {
+        shardName: 'shard2ReplSet',
+        numOrphanedDocs: 0,
+        numOwnedDocuments: 509,
+        ownedSizeBytes: 32067,
+        orphanedSizeBytes: 0
+      }
+    ]
+  }
+]
+databases
+[
+            'last modified': Timestamp({ t: 1, i: 0 })
+          }
+        ],
+        tags: []
+      }
+    }
+  },
+  {
+    database: {
+      _id: 'eCommerceDB',
+      primary: 'shard2ReplSet',
+      version: {
+        uuid: UUID('b359ad80-a336-45be-82e3-cadddbdceb0b'),
+        timestamp: Timestamp({ t: 1781101593, i: 10 }),
+        lastMod: 1
+      }
+    },
+    collections: {
+      'eCommerceDB.orders': {
+        shardKey: {
+          customer_id: 'hashed'
+        },
+        unique: false,
+        balancing: true,
+        allowMigrations: true,
+        chunkMetadata: [
+          {
+            shard: 'shard1ReplSet',
+            nChunks: 1
+          },
+          {
+            shard: 'shard2ReplSet',
+            nChunks: 1
+          }
+        ],
+        chunks: [
+          {
+            min: {
+              customer_id: MinKey()
+            },
+            max: {
+              customer_id: 0
+            },
+            'on shard': 'shard2ReplSet',
+            'last modified': Timestamp({ t: 1, i: 0 })
+          },
+          {
+            min: {
+              customer_id: 0
+            },
+            max: {
+              customer_id: MaxKey()
+            },
+            'on shard': 'shard1ReplSet',
+            'last modified': Timestamp({ t: 1, i: 1 })
+          }
+        ],
+        tags: []
+      }
+    }
+  }
+]
+[mongos] eCommerceDB
+
+
